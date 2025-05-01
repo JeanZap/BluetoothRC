@@ -15,27 +15,33 @@ motorPwm.freq(50)
 
 bluetoothModule = UART(0, 9600)
 
+
 def definirValoresIniciais():
     ledImbutido = 25
 
-    Pin(ledImbutido).low()
+    Pin(ledImbutido, Pin.OUT).high()
     servoPwm.duty_u16(obterDutyDirecao(90))
+
 
 def obterDutyDirecao(direcao):
     intervaloPorGrau = (MAX_DUTY - MIN_DUTY) / 180
     return int(intervaloPorGrau * direcao) + MIN_DUTY
 
+
 def obterDutyMotor(velocidade):
     intervaloPorGrau = (MAX_DUTY - MIN_DUTY) / 180
     return int(intervaloPorGrau * velocidade) + MIN_DUTY
 
+
 def tratarDadosBluetooth(dados):
     return str(dados).replace('\\', '').replace("b'{", "{").replace("}'", '}')
+
 
 def obterDadoBluetooth():
     dadosObtidos = bluetoothModule.read()
     dadosObtidos = tratarDadosBluetooth(dadosObtidos)
     return json.loads(dadosObtidos)
+
 
 definirValoresIniciais()
 while True:
